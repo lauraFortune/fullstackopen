@@ -11,20 +11,22 @@ const Button = ({onClick, text}) => {
   )
 }
 
-const StatisticLine = ({text, stat}) => <p>{text} {stat}</p>
+const StatisticLine = ({text, value}) => <tr><td>{text}</td><td>{value}</td></tr>
 
 const Statistics = ({good, neutral, bad, all, average, positive}) => {
   return(
     all <= 0
     ? <p>No feedback given</p>
-    : <>
-        <StatisticLine text="good" stat={good} />
-        <StatisticLine text="neutral" stat={neutral} />
-        <StatisticLine text="bad" stat={bad} />
-        <StatisticLine text="all" stat={all} />
-        <StatisticLine text="average" stat={average} />
-        <StatisticLine text="positive" stat={positive} />
-      </>
+    : <table>
+        <tbody>
+          <StatisticLine text="good" value={good} />
+          <StatisticLine text="neutral" value={neutral} />
+          <StatisticLine text="bad" value={bad} />
+          <StatisticLine text="all" value={all} />
+          <StatisticLine text="average" value={average} />
+          <StatisticLine text="positive" value={positive} />
+        </tbody>
+      </table>
   )
 }
 
@@ -35,10 +37,10 @@ const App = () => {
   
   //stats
   const all = (good + neutral + bad)
-  const average = ((good - bad) / all).toFixed(2)
-  const positive = ((good/all) * 100).toFixed(2) + ' %'
+  const average = ((good - bad) / all).toFixed(1)
+  const positive = ((good/all) * 100).toFixed(1) + ' %'
                                
-  //click handler
+  //button handler
   const handleClick = (stateSetter, state) => () => stateSetter(state + 1)
     
   return(
