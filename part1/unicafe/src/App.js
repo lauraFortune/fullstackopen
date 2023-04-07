@@ -25,14 +25,16 @@ const Statistic = ({text, stat}) => <p>{text} {stat}</p>
 
 const Statistics = ({good, neutral, bad, all, average, positive}) => {
   return(
-    <>
-      <Statistic text="good" stat={good} />
-      <Statistic text="neutral" stat={neutral} />
-      <Statistic text="bad" stat={bad} />
-      <Statistic text="all" stat={all} />
-      <Statistic text="average" stat={average} />
-      <Statistic text="positive" stat={positive} />
-    </>
+    all <= 0
+    ? <p>No feedback given</p>
+    : <>
+        <Statistic text="good" stat={good} />
+        <Statistic text="neutral" stat={neutral} />
+        <Statistic text="bad" stat={bad} />
+        <Statistic text="all" stat={all} />
+        <Statistic text="average" stat={average} />
+        <Statistic text="positive" stat={positive} />
+      </>
   )
 }
 
@@ -43,8 +45,9 @@ const App = () => {
   
   //stats
   const all = (good + neutral + bad)
-  const average = all === 0? 0: (good - bad) / all
-  const positive = all === 0? 0 + ' %': (good/all) * 100 + ' %'
+  const average = ((good - bad) / all).toFixed(2)
+  const positive = ((good/all) * 100).toFixed(2) + ' %'
+                               
   //click handlers
   const handleGoodClick = () => setGood(good + 1) 
   const handleNeutralClick = () => setNeutral(neutral + 1) 
