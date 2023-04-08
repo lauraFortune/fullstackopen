@@ -1,4 +1,4 @@
-# Exercises 1.6.-1.7
+# Exercises 1.1 - 1.5
+### Course information
 
-The student restaurant of the University of Helsinki Unicafe collects feedback from its customers.<br/>
-Task: Implement a web application for collecting customer feedback. 
+
