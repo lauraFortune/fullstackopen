@@ -5,26 +5,32 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Header from './components/Header'
 
+import personService from './services/persons'
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('') 
   const [newNumber, setNewNumber] = useState('')
   const [filterTerm, setFilterTerm] = useState('')
+  // handle input changes
+  const handleNameChange = (e) => setNewName(e.target.value)
+  const handleNumberChange = (e) => setNewNumber(e.target.value)
+  const handleFilterTermChange = (e) => setFilterTerm(e.target.value)
 
-  const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+  // =====================  GET ALL PERSONS
+  //=======================================
+  const fetchPersonsHook = () => {
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }
 
-  useEffect(hook, [])
-  
-  console.log('render', persons.length, 'persons', persons)
-  
-  // add new person function
+  useEffect(fetchPersonsHook, [])
+
+  // =====================  CREATE PERSON
+  //=====================================
   const addPerson = (event) => {
     event.preventDefault()
 
@@ -40,10 +46,10 @@ const App = () => {
     )
 
     const create = personObject => {
-      axios
-        .post('http://localhost:3001/persons', personObject)
-        .then(response => {
-          setPersons(persons.concat(response.data))
+      personService
+        .create(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
         })
     }
 
@@ -52,15 +58,11 @@ const App = () => {
     ? alert(`${newName} is already added to the phonebook`)
     : create(personObject) // if not a dublicate: create person object
 
-    // // clear inputs on form submission
+    // clear inputs on form submission
     setNewName('')
     setNewNumber('')
   }
 
-  // handle input changes
-  const handleNameChange = (e) => setNewName(e.target.value)
-  const handleNumberChange = (e) => setNewNumber(e.target.value)
-  const handleFilterTermChange = (e) => setFilterTerm(e.target.value)
 
   return (
     <div>
@@ -77,7 +79,6 @@ const App = () => {
     </div>
   )
 }
-
 
 
 export default App
