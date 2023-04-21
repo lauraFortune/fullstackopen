@@ -39,12 +39,20 @@ const App = () => {
       person.name.trim().toLowerCase() === newName.trim().toLowerCase()
     )
 
-    // if name already exists - alert, else add new contact 
+    const create = personObject => {
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+        })
+    }
+
+    // check for duplicate name
     duplicateName
     ? alert(`${newName} is already added to the phonebook`)
-    : setPersons(persons.concat(personObject))
+    : create(personObject) // if not a dublicate: create person object
 
-    // clear inputs on form submission
+    // // clear inputs on form submission
     setNewName('')
     setNewNumber('')
   }
