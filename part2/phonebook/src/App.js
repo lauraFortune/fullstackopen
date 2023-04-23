@@ -1,24 +1,27 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Header from './components/Header'
-
 import personService from './services/persons'
 
 const App = () => {
+  
+  // === STATE VARIABLES ===
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('') 
   const [newNumber, setNewNumber] = useState('')
   const [filterTerm, setFilterTerm] = useState('')
+
+  // === EVENT HANDLERS ===
   // handle input changes
   const handleNameChange = (e) => setNewName(e.target.value)
   const handleNumberChange = (e) => setNewNumber(e.target.value)
   const handleFilterTermChange = (e) => setFilterTerm(e.target.value)
 
-  // =====================  GET ALL PERSONS
-  //=======================================
+  // === EFFECT HOOKS ===
+
+  // GET ALL PERSONS
   const fetchPersonsHook = () => {
     personService
       .getAll()
@@ -29,8 +32,9 @@ const App = () => {
 
   useEffect(fetchPersonsHook, [])
 
-  // =====================  CREATE PERSON
-  //=====================================
+  // === CRUD OPERATIONS ===
+  
+  // Create Person
   const addPerson = (event) => {
     event.preventDefault()
 
@@ -63,7 +67,26 @@ const App = () => {
     setNewNumber('')
   }
 
+  // Delete Person
+  const deletePerson = (id, name) => {
 
+    // new persons array with ommited person
+    const updatedPersons = persons.filter((person) => {
+      return person.id !== id
+    })
+
+    // if user confirms - delete person from db and update persons array
+    if(window.confirm(`Delete ${name}`)){
+      personService
+      .remove(id)
+      .then(() => {
+        setPersons(updatedPersons)
+      })
+    }
+
+  }
+
+  // === RENDERING ===
   return (
     <div>
       <Filter filterTerm={filterTerm} onTermChange={handleFilterTermChange}/>
@@ -73,9 +96,14 @@ const App = () => {
         newName={newName} 
         newNumber={newNumber} 
         onNameChange={handleNameChange} 
-        onNumberChange={handleNumberChange} />
+        onNumberChange={handleNumberChange} 
+      />
       <Header text="Numbers" />
-      <Persons persons={persons} filterTerm={filterTerm} />
+      <Persons 
+        persons={persons} 
+        filterTerm={filterTerm} 
+        handleDeleteClick={deletePerson}
+      />
     </div>
   )
 }

@@ -1,49 +1,24 @@
 {
-  "persons": [
-    {
-      "name": "Arto Hellas",
+  "persons":[
+    { 
+      "name": "Arto Hellas", 
       "number": "040-123456",
       "id": 1
     },
-    {
-      "name": "Ada Lovelace",
+    { 
+      "name": "Ada Lovelace", 
       "number": "39-44-5323523",
       "id": 2
     },
-    {
-      "name": "Dan Abramov",
+    { 
+      "name": "Dan Abramov", 
       "number": "12-43-234345",
       "id": 3
     },
-    {
-      "name": "Mary Poppendieck",
+    { 
+      "name": "Mary Poppendieck", 
       "number": "39-23-6423122",
       "id": 4
-    },
-    {
-      "name": "Larry McGarry",
-      "number": "04-23-454323",
-      "id": 5
-    },
-    {
-      "name": "Johnny Mackers",
-      "number": "87-34-234965",
-      "id": 6
-    },
-    {
-      "name": "Joe Bonners",
-      "number": "45-34-234562",
-      "id": 7
-    },
-    {
-      "name": "Bobby Lee",
-      "number": "23-33-564447",
-      "id": 8
-    },
-    {
-      "name": "Johnny Lee",
-      "number": "01-34-44455",
-      "id": 9
     }
   ]
 }

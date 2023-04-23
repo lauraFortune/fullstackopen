@@ -1,6 +1,6 @@
 import Person from "./Person"
 
-const Persons = ({persons, filterTerm}) => {
+const Persons = ({persons, filterTerm, handleDeleteClick}) => {
 
     // filtered persons
     const filtered = persons.filter((person) => 
@@ -10,7 +10,12 @@ const Persons = ({persons, filterTerm}) => {
         <div>
             {
                 filtered.map((person) => 
-                    <Person key={person.name} name={person.name} number={person.number}/>
+                    <Person 
+                        key={person.name} 
+                        name={person.name} 
+                        number={person.number} 
+                        onClick={()=>handleDeleteClick(person.id, person.name)}
+                    />
                 )
             }
         </div>
