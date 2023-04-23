@@ -33,7 +33,22 @@ const App = () => {
   useEffect(fetchPersonsHook, [])
 
   // === CRUD OPERATIONS ===
-  
+
+  // Update Person
+  const updatePerson = (id) => {
+
+    const person = persons.find((p) => p.id === id)
+    const changedPerson = {...person, number: newNumber} // update person's number
+
+    if(window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)){ 
+        personService
+        .update(id, changedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(p => p.id !== id ? p : returnedPerson))
+        })
+    }
+  }
+
   // Create Person
   const addPerson = (event) => {
     event.preventDefault()
@@ -56,10 +71,10 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
         })
     }
-
-    // check for duplicate name
+    
+    // if duplicate name - update person's number
     duplicateName
-    ? alert(`${newName} is already added to the phonebook`)
+    ? updatePerson(duplicateName.id)
     : create(personObject) // if not a dublicate: create person object
 
     // clear inputs on form submission
