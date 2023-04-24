@@ -4,6 +4,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Header from './components/Header'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   
@@ -12,6 +13,7 @@ const App = () => {
   const [newName, setNewName] = useState('') 
   const [newNumber, setNewNumber] = useState('')
   const [filterTerm, setFilterTerm] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   // === EVENT HANDLERS ===
   // handle input changes
@@ -45,6 +47,10 @@ const App = () => {
         .update(id, changedPerson)
         .then(returnedPerson => {
           setPersons(persons.map(p => p.id !== id ? p : returnedPerson))
+          setErrorMessage(`Updated ${returnedPerson.name}'s number`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
     }
   }
@@ -69,6 +75,10 @@ const App = () => {
         .create(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
+          setErrorMessage(`Added ${returnedPerson.name}`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
     }
     
@@ -106,6 +116,7 @@ const App = () => {
     <div>
       <Filter filterTerm={filterTerm} onTermChange={handleFilterTermChange}/>
       <Header text="Phonebook" />
+      <Notification message={errorMessage} />
       <PersonForm 
         addPerson={addPerson}
         newName={newName} 
