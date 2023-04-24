@@ -8,58 +8,116 @@ import Notification from './components/Notification'
 
 const App = () => {
   
-  // === STATE VARIABLES ===
+  // STATE VARIABLES 
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('') 
   const [newNumber, setNewNumber] = useState('')
   const [filterTerm, setFilterTerm] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState({ type: '', text: '' })
 
-  // === EVENT HANDLERS ===
-  // handle input changes
+  // EVENT HANDLERS - handle input changes
   const handleNameChange = (e) => setNewName(e.target.value)
   const handleNumberChange = (e) => setNewNumber(e.target.value)
   const handleFilterTermChange = (e) => setFilterTerm(e.target.value)
 
-  // === EFFECT HOOKS ===
+  // ================= CRUD FUNCTIONS ================ //
+  // ================================================= //
 
-  // GET ALL PERSONS
-  const fetchPersonsHook = () => {
+  // GET ALL persons function
+  const fetchPersons = () => {
     personService
       .getAll()
       .then(initialPersons => {
         setPersons(initialPersons)
       })
+      .catch(error => {                                                  
+        console.log(`Error message: ${error.message}`)
+        setMessage({ type: 'error', text: `Error: ${error.message}` })
+        setTimeout(() => {
+          setMessage({type: '', text: '' })
+        }, 5000)
+        
+      })
   }
 
-  useEffect(fetchPersonsHook, [])
+  useEffect(fetchPersons, [])
 
-  // === CRUD OPERATIONS ===
+  // CREATE person function
+  const createPerson = personObject => { 
+    personService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setMessage({ type: 'success', text: `Added ${returnedPerson.name}`})
+        setTimeout(() => {
+          setMessage({type: '', text: '' })
+        }, 5000)
+      })
+      .catch(
+        error => {
+          console.log(`Error message: ${error.message}`)
+          setMessage({ type: 'error', text: `Error: ${error.message}`})
+        }
+      )
+  }
 
-  // Update Person
+  // UPDATE person function
   const updatePerson = (id) => {
 
-    const person = persons.find((p) => p.id === id)
-    const changedPerson = {...person, number: newNumber} // update person's number
+    const personObject = persons.find((p) => p.id === id)
+    const changedPerson = {...personObject, number: newNumber} // update person's number
 
     if(window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)){ 
         personService
         .update(id, changedPerson)
         .then(returnedPerson => {
           setPersons(persons.map(p => p.id !== id ? p : returnedPerson))
-          setErrorMessage(`Updated ${returnedPerson.name}'s number`)
+          setMessage({ type: 'success', text: `Updated ${returnedPerson.name}'s number`})
           setTimeout(() => {
-            setErrorMessage(null)
+            setMessage({type: '', text: '' })
           }, 5000)
+        })
+        .catch(error => {
+          console.log(`Error message: ${error.message}`)
+          setMessage({ type: 'error', text: `Information of ${personObject.name} has already been removed from server` })
+          setTimeout(() => {
+            setMessage({type: '', text: '' })
+          }, 5000)
+          setPersons(persons.filter(p => p.id !== id)) 
         })
     }
   }
+  
+  // DELETE person function
+  const deletePerson = (id, name, updatedPersons) => {
+    personService
+    .remove(id)
+    .then(() => {
+      setPersons(updatedPersons)
+      setMessage({ type: 'success', text: `Successfully deleted ${name}` })
+      setTimeout(() => {
+        setMessage({type: '', text: '' })
+      }, 5000)
+    })
+    .catch(error => {
+      console.log(`Error message: ${error.message}`)
+      setMessage({type: 'error', text: `Information of ${name} has already been removed from server` })
+      setPersons(updatedPersons)
+      setTimeout(() => {
+        setMessage({type: '', text: '' })
+      }, 5000)
+    }
 
-  // Create Person
-  const addPerson = (event) => {
+    )
+  }
+
+  // ================== SUBMIT PERSON ================ //
+  // ================================================= //
+
+  const submitForm = (event) => {
     event.preventDefault()
 
-    // create person object
+    // create person object - with input values
     const personObject = {
       name: newName,
       number: newNumber,
@@ -70,31 +128,22 @@ const App = () => {
       person.name.trim().toLowerCase() === newName.trim().toLowerCase()
     )
 
-    const create = personObject => {
-      personService
-        .create(personObject)
-        .then(returnedPerson => {
-          setPersons(persons.concat(returnedPerson))
-          setErrorMessage(`Added ${returnedPerson.name}`)
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
-        })
-    }
-    
-    // if duplicate name - update person's number
+    // if duplicate name exists - update person's number
+    // else create a new person object
     duplicateName
-    ? updatePerson(duplicateName.id)
-    : create(personObject) // if not a dublicate: create person object
+    ? updatePerson(duplicateName.id) // update - api call
+    : createPerson(personObject) // create - api call
 
-    // clear inputs on form submission
+    // clear form inputs on submission
     setNewName('')
     setNewNumber('')
   }
 
-  // Delete Person
-  const deletePerson = (id, name) => {
 
+  // ================== DELETE PERSON ================ //
+  // ================================================= // 
+  const handleDeleteClick = (id, name) => {
+    
     // new persons array with ommited person
     const updatedPersons = persons.filter((person) => {
       return person.id !== id
@@ -102,23 +151,20 @@ const App = () => {
 
     // if user confirms - delete person from db and update persons array
     if(window.confirm(`Delete ${name}`)){
-      personService
-      .remove(id)
-      .then(() => {
-        setPersons(updatedPersons)
-      })
+      deletePerson(id, name, updatedPersons) // delete api call
     }
 
   }
 
-  // === RENDERING ===
+  // ================== RENDERING ==================== //
+  // ================================================= //
   return (
     <div>
       <Filter filterTerm={filterTerm} onTermChange={handleFilterTermChange}/>
       <Header text="Phonebook" />
-      <Notification message={errorMessage} />
+      <Notification message={message} />
       <PersonForm 
-        addPerson={addPerson}
+        onSubmit={submitForm}
         newName={newName} 
         newNumber={newNumber} 
         onNameChange={handleNameChange} 
@@ -128,7 +174,7 @@ const App = () => {
       <Persons 
         persons={persons} 
         filterTerm={filterTerm} 
-        handleDeleteClick={deletePerson}
+        onDeleteClick={handleDeleteClick}
       />
     </div>
   )
