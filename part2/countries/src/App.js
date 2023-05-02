@@ -11,10 +11,9 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState('')
 
   // EVENT HANDLERS - handle input changes
-  const handleSearchTermChange = (e) => setSearchTerm(e.target.value)
-  
-  // ================= CRUD FUNCTIONS ================ //
-  // ================================================= //
+  const handleSearchTermChange = (e) => {
+    setSearchTerm(e.target.value)
+  }
   
   // GET ALL countries function
   const fetchCountries = () => {
@@ -36,7 +35,7 @@ const App = () => {
   return(
     <>
       <SearchBox searchTerm={searchTerm} onChange={handleSearchTermChange} />
-      <Countries countries={countries} searchTerm={searchTerm} />
+      <Countries countries={countries} searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
     </>
   )
 

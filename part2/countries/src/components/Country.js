@@ -25,4 +25,6 @@ const Country = ({ selectedCountry: { name, capital, area, languages, demonyms, 
     )
 }
 
+
 export default Country
+
