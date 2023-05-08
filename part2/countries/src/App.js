@@ -14,13 +14,13 @@ const App = () => {
   const handleSearchTermChange = (e) => {
     setSearchTerm(e.target.value)
   }
-  
+
   // GET ALL countries function
   const fetchCountries = () => {
     countryService
-      .getAll()
-      .then(initialCountries => {
-        setCountries(initialCountries)
+      .getAllCountries()
+      .then(countriesData => {
+        setCountries(countriesData)
       })
       .catch((err) => {
         console.log(`Error message: ${err.message}`)
@@ -35,7 +35,7 @@ const App = () => {
   return(
     <>
       <SearchBox searchTerm={searchTerm} onChange={handleSearchTermChange} />
-      <Countries countries={countries} searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
+      <Countries countries={countries} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
     </>
   )
 

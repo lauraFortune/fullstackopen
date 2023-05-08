@@ -7,9 +7,9 @@ const Countries = ({ countries, searchTerm, setSearchTerm}) => {
     }
     
     // creates a filtered array of countries that match the searchTerm
-    const filtered = countries.filter((country) => {
+    const filtered = countries.filter((c) => {
         return(
-            country.name.common.toLowerCase().includes(searchTerm.toLowerCase())
+            c.name.common.toLowerCase().includes(searchTerm.toLowerCase())
         )
     })
 

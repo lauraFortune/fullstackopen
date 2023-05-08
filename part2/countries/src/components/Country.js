@@ -1,3 +1,5 @@
+import Weather from "./Weather"
+
 const Country = ({ selectedCountry: { name, capital, area, languages, demonyms, flags} }) => {
 
     const languagesArray = Object.values(languages)
@@ -21,6 +23,9 @@ const Country = ({ selectedCountry: { name, capital, area, languages, demonyms, 
              
                 <img src={flags.svg} alt={imageAlt} width="200" height="200" />
                 <p>{imageAlt}</p>
+
+                <Weather capital={capital} />
+   
             </>
     )
 }

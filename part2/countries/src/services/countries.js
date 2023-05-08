@@ -1,11 +1,11 @@
 import axios from 'axios'
-const baseUrl = 'https://restcountries.com/v3.1/all'
+const api_url = 'https://restcountries.com/v3.1/all'
 
-const getAll = () => {
-    const request = axios.get(baseUrl)
+const getAllCountries = () => {
+    const request = axios.get(api_url)
     return request.then(response => response.data)
 }
 
 
-export default { getAll }
+export default { getAllCountries }
 
