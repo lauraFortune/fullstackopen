@@ -11,7 +11,7 @@ const totalLikes = (blogs) => {
 
 const favouriteBlog = (blogs) => {
 
-    if (blogs.length === 0) {
+    if (!blogs.length) {
         return null
     } 
 
