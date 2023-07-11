@@ -57,12 +57,38 @@ const mostBlogs = (blogs) => {
     : authorWithMostBlogs
 }
 
+const mostLikes = (blogs) => {
 
+    const authors = blogs.reduce((accum, curr) => {
+        const existingAuthor = accum.find(obj => obj.author === curr.author)
+        if(existingAuthor){
+            existingAuthor.likes += curr.likes
+        } else {
+            accum.push({
+                author: curr.author,
+                likes: curr.likes
+            })
+        }
+        return accum
+    }, [])
+
+    const authorWithMostLikes = authors.reduce((accum, curr) => {
+        if(curr.likes > accum.likes){
+            accum = curr
+        }
+        return accum
+    }, authors[0])
+
+    return blogs.length === 0
+    ? null
+    : authorWithMostLikes
+}
 
 
 module.exports = {
     dummy,
     totalLikes,
     favouriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }
