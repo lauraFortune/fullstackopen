@@ -78,7 +78,7 @@ describe('total likes', () => {
 })
 
 describe('favourite blog', () => {
-    // @ test1 - no blogs
+    // @ test1 - zero blogs
     test('returns null when the blog list is empty', () => {
         const blogs = []
         const result = listHelper.favouriteBlog(blogs)
@@ -97,7 +97,7 @@ describe('favourite blog', () => {
         expect(result).toEqual(expected)
     })
     // @ test3 - many blogs
-    test('returns blog with most likes when list has more than one blogs', () => {
+    test('returns blog with most likes, when list has more than one blogs', () => {
         const result = listHelper.favouriteBlog(blogs)
         const expected = {
             title: "Canonical string reduction",
@@ -107,7 +107,7 @@ describe('favourite blog', () => {
         expect(result).toEqual(expected)
     })
     // @ test4 - many top favourites
-    test('returns the first blog with the most likes when more than one blogs have the same number of likes', () => {
+    test('returns the first blog with the most likes, when more than one blogs have the same number of likes', () => {
         const result = listHelper.favouriteBlog(blogs)
         const expected = {
             title: "Canonical string reduction",
@@ -118,3 +118,28 @@ describe('favourite blog', () => {
     })
 })
 
+describe('most blogs', () => {
+    // @ test1 - zero blogs
+    test('returns blog when blogs list has only one blog', () => {
+        const blogs = []
+        const result = listHelper.mostBlogs(blogs)
+        const expected = null
+        expect(result).toEqual(expected)
+    })
+    // @ test2 - 1 blog
+    test('returns null when the blog list is empty', () => {
+        const listWithOneBlog = blogs.slice(0, 1) // create single item array from blogs ar
+        const result = listHelper.mostBlogs(listWithOneBlog)
+        const expected = {
+            author: "Michael Chan",
+            blogs: 1
+        }
+        expect(result).toEqual(expected)
+    })
+    // @ test3 - many blogs
+    test('returns author name and blog count for author with most blogs, when list has more than one blogs', () => {
+        const result = listHelper.mostBlogs(blogs)
+        const expected = { author: 'Robert C. Martin', blogs: 3 }
+        expect(result).toEqual(expected)
+    })
+})
