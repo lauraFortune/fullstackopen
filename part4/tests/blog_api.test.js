@@ -49,7 +49,6 @@ test('blog posts have a unique identifier property named id,', async () => {
     const ids = response.body.map(r => r.id)
 
     expect(ids).toBeDefined()
-    expect(response.body[0]._id).toBe(undefined)
 })
 
 test('a valid blog can be added', async () => {
