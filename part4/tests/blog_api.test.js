@@ -70,7 +70,7 @@ test('a valid blog can be added', async () => {
 
     const titles = blogsAtEnd.map(b => b.title)
     expect(titles).toContain(
-        'Api testing'
+        'Mastering API testing'
     )
 })
 
@@ -91,6 +91,18 @@ test('if the likes property is missing from the request, it will default to the 
     expect(response.body.likes).toBeDefined()
 })
 
+test('if title or url properties are missing from the request, the backend responds with the status code 400 Bad Request', async () => {
+    const newBlog = {
+        author: 'Grace Hopper',
+        url: 'http://blog-gracehopper.com'
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+})
 
 afterAll(async () => {
     await mongoose.connection.close()
