@@ -51,6 +51,7 @@ test('blog posts have a unique identifier property named id,', async () => {
     expect(ids).toBeDefined()
 })
 
+
 test('a valid blog can be added', async () => {
     const newBlog = {
         title: 'Mastering API testing',
@@ -102,6 +103,21 @@ test('if title or url properties are missing from the request, the backend respo
         .send(newBlog)
         .expect(400)
         .expect('Content-Type', /application\/json/)
+})
+
+test('deletion of a blog succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+
+    const blogsAtEnd = await blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(
+        initialBlogs.length - 1
+    )
 })
 
 afterAll(async () => {
