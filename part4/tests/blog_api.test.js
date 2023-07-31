@@ -105,7 +105,7 @@ test('if title or url properties are missing from the request, the backend respo
         .expect('Content-Type', /application\/json/)
 })
 
-test('deletion of a blog succeeds with status code 204 if id is valid', async () => {
+test('deletion of a blog succeeds with status 204 if id is valid', async () => {
     const blogsAtStart = await blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
@@ -118,6 +118,20 @@ test('deletion of a blog succeeds with status code 204 if id is valid', async ()
     expect(blogsAtEnd).toHaveLength(
         initialBlogs.length - 1
     )
+})
+
+test("updating blog post's 'like' property returns status 200", async () => {
+    
+    const blogs = await blogsInDb()
+    const blogToUpdate = blogs[0]
+    const likesUpdate = { likes: 5 }
+    
+    const response = await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(likesUpdate)
+        .expect(200)
+
+    expect(response.body.likes).toBe(5)
 })
 
 afterAll(async () => {
